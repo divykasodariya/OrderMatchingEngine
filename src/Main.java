@@ -9,7 +9,8 @@ public class Main {
         System.out.println("Allocating arena of " + iterations + " orders...");
         OrderPool pool = new OrderPool(iterations);
         System.out.println("Pool ready. Starting benchmark with random orders...\n");
-
+        OrderBook orderBook= new OrderBook();
+        ProcessOrder processOrder = new ProcessOrder();
         long startTime = System.nanoTime();
 
         for (int i = 0; i < iterations; i++) {
@@ -24,7 +25,9 @@ public class Main {
             int randomQty = ThreadLocalRandom.current().nextInt(1, 101);
 
             //  Allocate from the pool
-            pool.getOrder(i, randomType, randomPrice, randomQty, i);
+            Order cur= pool.getOrder(i, randomType, randomPrice, randomQty, i);
+            orderBook.addOrder(cur);
+            processOrder.process(orderBook,pool);
         }
 
         long endTime = System.nanoTime();

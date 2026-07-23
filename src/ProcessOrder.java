@@ -5,7 +5,7 @@ import java.util.PriorityQueue;
 
 public class ProcessOrder {
 
-    void process(OrderBook orderbook ){
+    void process(OrderBook orderbook, OrderPool op ){
 
         PriorityQueue<Order> Sellpq = orderbook.getSellOrderPq();
         PriorityQueue<Order> Buypq = orderbook.getBuyOrderPq();
@@ -15,12 +15,14 @@ public class ProcessOrder {
         Order prSell = Sellpq.peek();
         Order prBuy  = Buypq.peek();
         while(!Sellpq.isEmpty() && orderbook.Removed.contains(prSell.orderId)){
+            op.releaseOrder(prSell.poolIndex);
             Sellpq.poll();
             if(!Sellpq.isEmpty())prSell=Sellpq.peek();
         }
 
 
         while(!Buypq.isEmpty() && orderbook.Removed.contains(prBuy.orderId)){
+            op.releaseOrder(prBuy.poolIndex);
             Buypq.poll();
             if(!Buypq.isEmpty())prBuy=Buypq.peek();
         }
@@ -37,20 +39,25 @@ public class ProcessOrder {
             prBuy=Buypq.peek();
 
             while(!Sellpq.isEmpty() && orderbook.Removed.contains(prSell.orderId)){
+                op.releaseOrder(prSell.poolIndex);
                 Sellpq.poll();
                 if(!Sellpq.isEmpty())prSell=Sellpq.peek();
             }
             while(!Buypq.isEmpty() && orderbook.Removed.contains(prBuy.orderId)){
+                op.releaseOrder(prBuy.poolIndex);
                 Buypq.poll();
                 if(!Buypq.isEmpty())prBuy=Buypq.peek();
             }
 
             if(prSell.quantity<prBuy.quantity){
                 // matching this pr sell with pr buy
+                op.releaseOrder(Sellpq.peek().poolIndex);
+                op.releaseOrder(Buypq.peek().poolIndex);
                 Sellpq.poll();
                 Buypq.poll();
 
-                Order newRemInBuy = new Order(prBuy.orderId,prBuy.type,prBuy.price,prBuy.quantity-prSell.quantity,prBuy.time, prBuy.poolIndex);
+//                Order newRemInBuy = new Order(prBuy.orderId,prBuy.type,prBuy.price,prBuy.quantity-prSell.quantity,prBuy.time, prBuy.poolIndex);
+                Order newRemInBuy = op.getOrder(prBuy.orderId,prBuy.type,prBuy.price,prBuy.quantity-prSell.quantity,prBuy.time);
                 orderbook.Orders.put(newRemInBuy.orderId, newRemInBuy);
                 Buypq.add(newRemInBuy);
                 int tradedQty = Math.min(prSell.quantity, prBuy.quantity);
@@ -67,8 +74,11 @@ public class ProcessOrder {
             else{
 
                 if(prSell.quantity==prBuy.quantity){
+                    op.releaseOrder(Sellpq.peek().poolIndex);
+                    op.releaseOrder(Buypq.peek().poolIndex);
                     Sellpq.poll();
                     Buypq.poll();
+
                     int tradedQty = Math.min(prSell.quantity, prBuy.quantity);
 
                     System.out.println(
@@ -79,11 +89,14 @@ public class ProcessOrder {
                     );
                     continue;
                 }
-
+                op.releaseOrder(Sellpq.peek().poolIndex);
+                op.releaseOrder(Buypq.peek().poolIndex);
                 Sellpq.poll();
                 Buypq.poll();
 
-                Order newRemInSell = new Order(prSell.orderId,prSell.type,prSell.price,prSell.quantity-prBuy.quantity,prSell.time,prSell.poolIndex);
+//                Order newRemInSell = new Order(prSell.orderId,prSell.type,prSell.price,prSell.quantity-prBuy.quantity,prSell.time,prSell.poolIndex);
+                Order newRemInSell = op.getOrder(prSell.orderId,prSell.type,prSell.price,prSell.quantity-prBuy.quantity,prSell.time);
+
                 Sellpq.add(newRemInSell);
                 int tradedQty = Math.min(prSell.quantity, prBuy.quantity);
 

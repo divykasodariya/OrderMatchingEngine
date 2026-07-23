@@ -44,12 +44,14 @@ public class OrderBook {
 
     public void amendOrder(int OrderId, int qtyNew) {
         if(Orders.get(OrderId).type==OrderTypes.Types.SELL){
-            SellOrderPq.remove(Orders.get(OrderId));
+//            SellOrderPq.remove(Orders.get(OrderId));
+            Removed.add(OrderId);
             Orders.get(OrderId).quantity=qtyNew;
             SellOrderPq.add(Orders.get(OrderId));
         }
         else{
-            BuyOrderPq.remove(Orders.get(OrderId));
+//            BuyOrderPq.remove(Orders.get(OrderId));
+            Removed.add(OrderId);
             Orders.get(OrderId).quantity=qtyNew;
             BuyOrderPq.add(Orders.get(OrderId));
         }
@@ -57,12 +59,14 @@ public class OrderBook {
 
     public void amendOrder(int OrderId, double newprice) {
         if(Orders.get(OrderId).type==OrderTypes.Types.SELL){
-            SellOrderPq.remove(Orders.get(OrderId));
+//            SellOrderPq.remove(Orders.get(OrderId));
+            Removed.add(OrderId);
             Orders.get(OrderId).price = newprice;
             SellOrderPq.add(Orders.get(OrderId));
         }
         else{
-            BuyOrderPq.remove(Orders.get(OrderId));
+//            BuyOrderPq.remove(Orders.get(OrderId));
+            Removed.add(OrderId);
             Orders.get(OrderId).price = newprice;
             BuyOrderPq.add(Orders.get(OrderId));
         }
@@ -71,13 +75,15 @@ public class OrderBook {
 
     public void amendOrder(int OrderId , int qtyNew , double newprice){
         if(Orders.get(OrderId).type==OrderTypes.Types.SELL){
-            SellOrderPq.remove(Orders.get(OrderId));
+//            SellOrderPq.remove(Orders.get(OrderId));
+            Removed.add(OrderId);
             Orders.get(OrderId).price = newprice;
             Orders.get(OrderId).quantity=qtyNew;
             SellOrderPq.add(Orders.get(OrderId));
         }
         else{
-            BuyOrderPq.remove(Orders.get(OrderId));
+//            BuyOrderPq.remove(Orders.get(OrderId));
+            Removed.add(OrderId);
             Orders.get(OrderId).price = newprice;
             Orders.get(OrderId).quantity=qtyNew;
             BuyOrderPq.add(Orders.get(OrderId));
