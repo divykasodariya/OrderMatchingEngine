@@ -1,0 +1,6 @@
+   Benchmark Results
+Total Operations : 10000000
+Total Time       : 625 ms
+Throughput       : 16,000,000 ops/sec
+
+Process finished with exit code 0

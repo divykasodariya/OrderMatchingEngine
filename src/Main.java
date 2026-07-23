@@ -1,29 +1,41 @@
 import Models.Order;
 import Models.OrderTypes;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 public class Main {
 
     public static void main(String[] args) {
 
         OrderBook orderBook = new OrderBook();
+        int iterations = 10_000_000;
 
-        // Sell Orders
-        orderBook.addOrder(new Order(1, OrderTypes.Types.SELL, 100.0, 10, 1));
-        orderBook.addOrder(new Order(2, OrderTypes.Types.SELL, 102.0, 5, 2));
-        orderBook.addOrder(new Order(3, OrderTypes.Types.SELL, 101.0, 8, 3));
+        long startTime = System.nanoTime();
 
-        // Buy Orders
-        orderBook.addOrder(new Order(4, OrderTypes.Types.BUY, 99.0, 6, 4));
-        orderBook.addOrder(new Order(5, OrderTypes.Types.BUY, 101.0, 12, 5));
-        orderBook.addOrder(new Order(6, OrderTypes.Types.BUY, 103.0, 7, 6));
+        for (int i = 0; i < iterations; i++) {
+            // Generate random type (50% chance of BUY or SELL)
+            OrderTypes.Types randomType = ThreadLocalRandom.current().nextBoolean() ?
+                    OrderTypes.Types.BUY : OrderTypes.Types.SELL;
 
-        System.out.println("Before Matching:");
-        orderBook.printOrderBook();
+            // generate random price (between 100.0 and 200.0)
+            double randomPrice = ThreadLocalRandom.current().nextDouble(100.0, 200.0);
 
-        ProcessOrder matcher = new ProcessOrder();
-        matcher.process(orderBook);
+            // Generate random quantity (between 1 and 100)
+            int randomQty = ThreadLocalRandom.current().nextInt(1, 101);
 
-        System.out.println("\nAfter Matching:");
-        orderBook.printOrderBook();
+            orderBook.addOrder(new Order(i, randomType, randomPrice, randomQty, i));
+        }
+
+        long endTime = System.nanoTime();
+
+        long durationMs = (endTime - startTime) / 1_000_000;
+        double seconds = durationMs / 1000.0;
+        double opsPerSec = seconds > 0 ? iterations / seconds : 0;
+
+        System.out.println("   Benchmark Results ");
+        System.out.println("Total Operations : " + iterations);
+        System.out.println("Total Time       : " + durationMs + " ms");
+        System.out.printf("Throughput       : %,.0f ops/sec\n", opsPerSec);
+
     }
 }
