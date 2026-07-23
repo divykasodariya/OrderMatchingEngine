@@ -23,7 +23,7 @@ public class Main {
             // Generate random quantity (between 1 and 100)
             int randomQty = ThreadLocalRandom.current().nextInt(1, 101);
 
-            // 4. Allocate from the pool
+            //  Allocate from the pool
             pool.getOrder(i, randomType, randomPrice, randomQty, i);
         }
 
@@ -33,7 +33,7 @@ public class Main {
         double seconds = durationMs / 1000.0;
         double opsPerSec = seconds > 0 ? iterations / seconds : 0;
 
-        System.out.println("=== Benchmark Results ===");
+        System.out.println("   Benchmark Results ");
         System.out.println("Total Operations : " + iterations);
         System.out.println("Total Time       : " + durationMs + " ms");
         System.out.printf("Throughput       : %,.0f ops/sec\n", opsPerSec);
