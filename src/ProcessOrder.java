@@ -50,7 +50,7 @@ public class ProcessOrder {
                 Sellpq.poll();
                 Buypq.poll();
 
-                Order newRemInBuy = new Order(prBuy.orderId,prBuy.type,prBuy.price,prBuy.quantity-prSell.quantity,prBuy.time);
+                Order newRemInBuy = new Order(prBuy.orderId,prBuy.type,prBuy.price,prBuy.quantity-prSell.quantity,prBuy.time, prBuy.poolIndex);
                 orderbook.Orders.put(newRemInBuy.orderId, newRemInBuy);
                 Buypq.add(newRemInBuy);
                 int tradedQty = Math.min(prSell.quantity, prBuy.quantity);
@@ -83,7 +83,7 @@ public class ProcessOrder {
                 Sellpq.poll();
                 Buypq.poll();
 
-                Order newRemInSell = new Order(prSell.orderId,prSell.type,prSell.price,prSell.quantity-prBuy.quantity,prSell.time);
+                Order newRemInSell = new Order(prSell.orderId,prSell.type,prSell.price,prSell.quantity-prBuy.quantity,prSell.time,prSell.poolIndex);
                 Sellpq.add(newRemInSell);
                 int tradedQty = Math.min(prSell.quantity, prBuy.quantity);
 

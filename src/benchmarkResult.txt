@@ -1,0 +1,4 @@
+     Benchmark Results
+Total Operations : 10000000
+Total Time       : 59 ms
+Throughput       : 169,491,525 ops/sec
