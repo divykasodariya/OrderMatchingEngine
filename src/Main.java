@@ -8,6 +8,7 @@ public class Main {
     public static void main(String[] args) {
 
         OrderBook orderBook = new OrderBook();
+        ProcessOrder processOrder= new ProcessOrder();
         int iterations = 10_000_000;
 
         long startTime = System.nanoTime();
@@ -24,6 +25,7 @@ public class Main {
             int randomQty = ThreadLocalRandom.current().nextInt(1, 101);
 
             orderBook.addOrder(new Order(i, randomType, randomPrice, randomQty, i));
+            processOrder.process(orderBook);
         }
 
         long endTime = System.nanoTime();
